@@ -1,2 +1,2 @@
-# Class-o-connect-
+# Class-o-connect
 Smart Interactive Classroom 
