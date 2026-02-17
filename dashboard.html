@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard - Class-o-Connect</title>
+<style>
+
+:root {
+  --bg: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  --card: rgba(255, 255, 255, 0.95);
+  --text: #1f2937;
+  --muted: #6b7280;
+  --primary: #667eea;
+  --primary-strong: #5a67d8;
+  --border: rgba(226, 232, 240, 0.8);
+  --shadow: 0 10px 30px rgba(0,0,0,0.1);
+  --backdrop-filter: blur(10px);
+  --danger: #ef4444;
+  --success: #10b981;
+  --warning: #f59e0b;
+}
+
+html[data-theme="dark"] {
+  --bg: linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  --card: rgba(17,24,39,0.95);
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --primary: #6366f1;
+  --primary-strong: #4f46e5;
+  --border: rgba(31,41,55,0.8);
+  --shadow: 0 15px 35px rgba(0,0,0,0.4);
+  --backdrop-filter: blur(15px);
+  --danger: #f87171;
+  --success: #34d399;
+  --warning: #fbbf24;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+body.sidebar-collapsed .sidebar {
+  width: 80px;
+  padding: 16px 8px;
+}
+
+body.sidebar-collapsed .sidebar .label {
+  display: none;
+}
+
+body.sidebar-collapsed .sidebar .emoji {
+  font-size: 1.3rem;
+  margin: 0 auto;
+}
+
+body.sidebar-collapsed .wrap {
+  grid-template-columns: 80px 1fr;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--card);
+  backdrop-filter: var(--backdrop-filter);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  box-shadow: var(--shadow);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
+}
+
+.brand .logo {
+  font-size: 2rem;
+}
+
+.brand .badge {
+  font-size: 12px;
+  background: linear-gradient(45deg, var(--primary), var(--primary-strong));
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-btn {
+  border: 1px solid var(--border);
+  background: var(--card);
+  backdrop-filter: var(--backdrop-filter);
+  border-radius: 12px;
+  padding: 10px 12px;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+}
+
+.icon-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  backdrop-filter: var(--backdrop-filter);
+  border-radius: 25px;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+}
+
+.user-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.wrap {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: calc(100vh - 80px);
+  position: relative;
+}
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--card);
+  backdrop-filter: var(--backdrop-filter);
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.menu {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.menu button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  color: var(--muted);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.menu button.active,
+.menu button:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: var(--primary);
+  transform: translateX(4px);
+}
+
+.menu .emoji {
+  width: 24px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.main {
+  padding: 32px;
+  background: rgba(0, 0, 0, 0.02);
+  min-height: 100vh;
+  position: relative;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(45deg, var(--primary), var(--primary-strong));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  color: var(--muted);
+}
+
+.btn {
+  border-radius: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  color: white;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+  background: var(--border);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  background: var(--muted);
+}
+
+.btn-danger {
+  background: var(--danger);
+}
+
+.btn-danger:hover {
+  box-shadow: 0 15px 35px rgba(239, 68, 68, 0.3);
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.action-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  transition: all 0.5s ease;
+}
+
+.action-card:hover::before {
+  top: -20%;
+  right: -20%;
+}
+
+.action-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+}
+
+.action-card .emoji {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.action-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.action-card p {
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+.card-container {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.card {
+  background: var(--card);
+  backdrop-filter: var(--backdrop-filter);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.card-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.class-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.class-card {
+  background: var(--card);
+  backdrop-filter: var(--backdrop-filter);
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.class-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-strong));
+}
+
+.class-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow);
+}
+
+.class-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.class-code {
+  display: inline-block;
+  background: rgba(102, 126, 234, 0.1);
+  color: var(--primary);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.class-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+}
+
+.modal.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: var(--card);
+  backdrop-filter: var(--backdrop-filter);
+  padding: 2.5rem;
+  border-radius: 24px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: transparent;
+  font-size: 1.5rem;
+  color: var(--muted);
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.class-detail-header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  color: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.class-detail-header h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.class-detail-header .class-code {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.class-detail-header p {
+  opacity: 0.95;
+  margin-top: 1rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 2rem;
+  background: var(--card);
+  backdrop-filter: var(--backdrop-filter);
+  padding: 8px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.content-item {
+  background: var(--card);
+  backdrop-filter: var(--backdrop-filter);
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.content-item:hover {
+  box-shadow: var(--shadow);
+  transform: translateX(4px);
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.content-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.content-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.content-description {
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.content-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-small {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
+}
+
+.status-graded {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+.status-submitted {
+  background: rgba(102, 126, 234, 0.1);
+  color: var(--primary);
+}
+
+.submission-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+.file-upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(102, 126, 234, 0.02);
+}
+
+.file-upload-area:hover {
+  border-color: var(--primary);
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.file-upload-area.has-file {
+  border-color: var(--success);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 1rem;
+  padding: 12px;
+  background: var(--card);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--primary);
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.download-link:hover {
+  background: var(--primary-strong);
+  transform: translateY(-2px);
+}
+
+.submission-file .emoji {
+  font-size: 1.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--muted);
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.quiz-question {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 12px;
+}
+
+.question-text {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.quiz-option:hover {
+  background: rgba(102, 126, 234, 0.05);
+  border-color: var(--primary);
+}
+
+.quiz-option input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 1.5rem;
+  background: var(--card);
+  border-radius: 16px;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+}
+
+.member-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.member-info {
+  flex: 1;
+}
+
+.member-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.member-email {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+/* ===== QUIZ CREATION – FINAL FIX ===== */
+
+.quiz-question-item {
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  transition: 0.3s ease;
+}
+
+.quiz-question-item:hover {
+  box-shadow: var(--shadow);
+}
+
+.quiz-question-item label {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.quiz-option-inputs {
+  background: rgba(102,126,234,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.option-input-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.option-input-row input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+.quiz-option-input {
+  flex: 1;
+}
+
+.add-option-btn {
+  margin-top: 0.5rem;
+  background: var(--primary);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.add-option-btn:hover {
+  background: var(--primary-strong);
+}
+
+#createQuizModal input,
+#createQuizModal textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+#createQuizModal input:focus,
+#createQuizModal textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+}
+
+/* Quiz questions container */
+#quizQuestionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Individual question card */
+.quiz-question-item {
+  background: rgba(102,126,234,0.05);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: 0.3s ease;
+}
+
+.quiz-question-item:hover {
+  box-shadow: var(--shadow);
+}
+
+/* Question label */
+.quiz-question-item label {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Options box */
+.quiz-option-inputs {
+  background: rgba(102,126,234,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+/* Option row */
+.option-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0.75rem;
+}
+
+.option-input-row input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+/* Option text input */
+.quiz-option-input {
+  flex: 1;
+}
+
+/* Add option button */
+.add-option-btn {
+  margin-top: 0.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.add-option-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+}
+@media (max-width: 1024px) {
+  .wrap {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .analytics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+.filter-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+
+.filter-btn:hover {
+  background: rgba(102, 126, 234, 0.05);
+  border-color: var(--primary);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  color: white;
+  border-color: var(--primary);
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 16px;
+  }
+  
+  .main {
+    padding: 16px;
+  }
+  
+  .class-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .performance-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.iframe-container {
+  width: 100%;
+  height: calc(100vh - 120px); /* navbar + small padding */
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--card);
+}
+
+.iframe-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+ .logo img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+/* Enhanced Text Styling - Match Login Page */
+.brand > span:not(.logo):not(.badge) {
+  color: #667eea;
+  font-weight: 700;
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.5px;
+}
+</style>
+</head>
+<body>
+
+  <nav class="navbar">
+  <div class="brand">
+    <span class="logo"><img src="logo.png" alt="Class-o-Connect logo"></span>
+    <span>Class-o-Connect</span>
+    <span class="badge" id="roleBadge"></span>
+  </div>
+  <div class="nav-actions">
+    <button class="icon-btn" onclick="toggleTheme()" id="themeToggle">🌙</button>
+    <button id="collapseBtn" class="icon-btn">📱</button>
+    <div class="user-chip">
+      <div class="avatar" id="userAvatar"></div>
+      <span id="userName"></span>
+    </div>
+    <button class="icon-btn logout-btn" onclick="logout()">🚪</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <aside class="sidebar">
+    <ul class="menu">
+      <li><button class="active" onclick="showSection('home')"><span class="emoji">🏠</span><span class="label">Home</span></button></li>
+      <li><button onclick="showSection('classes')"><span class="emoji">📚</span><span class="label">My Classes</span></button></li>
+      <li><button onclick="showSection('attendance')"><span class="emoji">✅</span><span class="label">Attendance Tracking</span></button> </li>
+      <li><button onclick="showSection('analytics')"><span class="emoji">📊</span><span class="label">Analytics</span></button></li>
+      <li id="schedulerMenuItem"><button onclick="showSection('scheduler')"><span class="emoji">📅</span><span class="label">Scheduler</span></button></li>
+      <li><button onclick="showSection('conferencing')"><span class="emoji">📹</span><span class="label">Video Conferencing</span></button></li>
+      <li><button onclick="showSection('flashcards')"><span class="emoji">🃏</span><span class="label">Flashcards</span></button></li>
+      <li><button onclick="showSection('game')"><span class="emoji">🎮</span><span class="label">Game Zone</span></button></li>
+     <li><button onclick="showSection('chatbot')"><span class="emoji">🤖</span><span class="label">Chatbot</span></button></li>
+      <li><button onclick="showSection('trending')"><span class="emoji">🔥</span><span class="label">Trending Topics</span></button></li>
+</ul>
+  </aside>
+
+  
+
+  <main class="main">
+    <!-- Home Section -->
+    <section id="homeSection">
+      <div class="page-header">
+        <h2>Welcome Back!</h2>
+        <p>Your learning journey continues here</p>
+      </div>
+
+      <div class="quick-actions">
+        <div class="action-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="showSection('classes')">
+          <span class="emoji">📚</span>
+          <h3>My Classes</h3>
+          <p>View and manage your classes</p>
+        </div>
+        <div class="action-card" style="background: linear-gradient(135deg, #5255f7 0%, #6394ef 100%);" onclick="showSection('conferencing')">
+          <span class="emoji">📹</span>
+          <h3>Video Conference</h3>
+          <p>Start your Virtual Meets</p>
+        </div>
+        <div class="action-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="showSection('flashcards')">
+          <span class="emoji">🃏</span>
+          <h3>Flashcards</h3>
+          <p>Study with interactive flashcards</p>
+        </div>
+      </div>
+       </section>
+
+    <!-- Classes Section -->
+    <section id="classesSection" style="display: none;">
+      <div class="page-header">
+        <h2>My Classes 📚</h2>
+        <p>Manage all your classes in one place</p>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-bottom: 2rem;">
+        <button class="btn" onclick="openModal('createClassModal')" id="createClassBtn" style="display: none;">
+          ➕ Create Class
+        </button>
+        <button class="btn" onclick="openModal('joinClassModal')" id="joinClassBtn" style="display: none;">
+          🔗 Join Class
+        </button>
+      </div>
+
+      <div class="class-grid" id="classList"></div>
+    </section>
+
+    <!-- Class Detail Section -->
+    <section id="classDetailSection" style="display: none;">
+      <button class="btn-secondary btn" onclick="backToClasses()" style="margin-bottom: 1rem;">← Back to Classes</button>
+      
+      <div class="class-detail-header">
+        <h2 id="classDetailTitle">Class Name</h2>
+        <div>
+          <span class="class-code" id="classCodeDisplay">CLASS123</span>
+          <button class="btn-secondary btn btn-small" onclick="copyClassCode()" style="margin-left: 12px;">📋 Copy Code</button>
+        </div>
+        <p id="classDetailDescription">Class description</p>
+      </div>
+
+     <div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('announcements')">📢 Announcements</button>
+  <button class="tab-btn" onclick="switchTab('assignments')">📝 Assignments</button>
+  <button class="tab-btn" onclick="switchTab('quizzes')">📋 Quizzes</button>
+  <button class="tab-btn" onclick="switchTab('notes')">📚 Notes</button>
+  <button class="tab-btn" onclick="switchTab('members')">👥 Members</button>
+  <button class="tab-btn" onclick="switchTab('settings')">⚙️ Settings</button>
+</div>
+
+      <!-- Announcements Tab -->
+      <div id="announcements-tab" class="tab-content active">
+        <button class="btn" onclick="openModal('createAnnouncementModal')" id="createAnnouncementBtn" style="margin-bottom: 1rem; display: none;">
+          ➕ Create Announcement
+        </button>
+        <div id="announcementsList"></div>
+      </div>
+
+      <!-- Assignments Tab -->
+      <div id="assignments-tab" class="tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+          <button class="btn" onclick="openModal('createAssignmentModal')" id="createAssignmentBtn" style="display: none;">
+            ➕ Create Assignment
+          </button>
+          
+          <!-- ✅ NEW: Assignment Filter Buttons (for students) -->
+          <div class="filter-container" id="assignmentFilterContainer" style="display: none;">
+            <button class="filter-btn active" onclick="filterAssignments('all')" data-filter="all">📚 All</button>
+            <button class="filter-btn" onclick="filterAssignments('pending')" data-filter="pending">⏳ Pending</button>
+            <button class="filter-btn" onclick="filterAssignments('submitted')" data-filter="submitted">📤 Submitted</button>
+            <button class="filter-btn" onclick="filterAssignments('graded')" data-filter="graded">✅ Graded</button>
+          </div>
+        </div>
+        <div id="assignmentsList"></div>
+      </div>
+
+      <!-- Quizzes Tab -->
+      <div id="quizzes-tab" class="tab-content">
+        <button class="btn" onclick="openModal('createQuizModal')" id="createQuizBtn" style="margin-bottom: 1rem; display: none;">
+          ➕ Create Quiz
+        </button>
+        <div id="quizzesList"></div>
+      </div>
+
+      <!-- Members Tab -->
+      <div id="members-tab" class="tab-content">
+        <div id="membersList"></div>
+      </div>
+<!-- Notes Tab -->
+<div id="notes-tab" class="tab-content">
+  <button class="btn" onclick="openModal('uploadNoteModal')" id="uploadNoteBtn" style="margin-bottom: 1rem; display: none;">
+    ➕ Upload Study Material
+  </button>
+  <div id="notesList"></div>
+</div>
+
+<!-- Settings Tab -->
+<div id="settings-tab" class="tab-content" >
+<div class="card">
+<h3 style="margin-bottom: 1.5rem;">⚙️ Class Settings</h3>
+<button class="btn-danger btn" onclick="deleteClass()" id="deleteClassBtn" >
+🗑️ Delete Class
+</button>
+<button class="btn-danger btn" onclick="leaveClass()" id="leaveClassBtn">
+🚪 Leave Class
+</button>
+</div>
+</div>
+</section>
+
+    <!-- Flashcards Section -->
+<section id="flashcardsSection" style="display:none;">
+<div class="page-header">
+<h2>🎴 Flashcards</h2>
+<p>Upload your notes and turn them into study flashcards</p>
+</div>
+<div class="iframe-container">
+<iframe src="flashcard.html" title="Flashcards"></iframe>
+</div>
+</section>
+<!-- Chatbot Section -->
+<section id="chatbotSection" style="display:none;">
+  <div class="page-header">
+  </div>
+
+  <div class="iframe-container">
+    <iframe src="chatbot1.html" title="Chatbot"></iframe>
+  </div>
+</section>
+<section id="attendanceSection" style="display:none;">
+  <div class="iframe-container">
+    <iframe id="attendanceFrame" src="attendance1.html"></iframe>
+  </div>
+</section>
+
+<section id="gameSection" style="display:none;">
+  <div class="iframe-container">
+    <iframe id="gameFrame"></iframe>
+  </div>
+</section>
+
+
+
+<!-- Analytics Section -->
+<section id="analyticsSection" style="display:none;">
+<div class="iframe-container">
+<iframe src="analytics.html" title="Analytics"></iframe>
+</div>
+</section>
+
+<!-- Scheduler Section -->
+<section id="schedulerSection" style="display:none;">
+<div class="iframe-container">
+<iframe src="scheduler.html" title="Scheduler"></iframe>
+</div>
+</section>
+
+<!-- Conferencing Section -->
+<section id="conferencingSection" style="display:none;">
+<div class="iframe-container">
+<iframe src="conferencing1.html" title="Video Conferencing"></iframe>
+</div>
+</section>
+
+<!-- Trending Section -->
+<section id="trendingSection" style="display:none;">
+<div class="iframe-container">
+<iframe id="classFrame" src="classpage/classpage.html"></iframe>
+</div>
+</section>
+
+</main>
+</div>
+
+<!-- Create Class Modal -->
+<div id="createClassModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Create New Class</h3>
+      <button class="close-btn" onclick="closeModal('createClassModal')">✕</button>
+    </div>
+    <form onsubmit="createClass(event)">
+      <div class="form-group">
+        <label>Class Name</label>
+        <input type="text" class="form-control" id="className" required />
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" class="form-control" id="classSubject" required />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" id="classDescription"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary btn" onclick="closeModal('createClassModal')">Cancel</button>
+        <button type="submit" class="btn">Create Class</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Join Class Modal -->
+<div id="joinClassModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Join Class</h3>
+      <button class="close-btn" onclick="closeModal('joinClassModal')">✕</button>
+    </div>
+    <form onsubmit="joinClass(event)">
+      <div class="form-group">
+        <label>Class Code</label>
+        <input type="text" class="form-control" id="joinClassCode" required placeholder="Enter 6-digit class code" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary btn" onclick="closeModal('joinClassModal')">Cancel</button>
+        <button type="submit" class="btn">Join Class</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Create Announcement Modal -->
+<div id="createAnnouncementModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Create Announcement</h3>
+      <button class="close-btn" onclick="closeModal('createAnnouncementModal')">✕</button>
+    </div>
+    <form onsubmit="createAnnouncement(event)">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" id="announcementTitle" required />
+      </div>
+      <div class="form-group">
+        <label>Content</label>
+        <textarea class="form-control" id="announcementContent" required></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary btn" onclick="closeModal('createAnnouncementModal')">Cancel</button>
+        <button type="submit" class="btn">Post Announcement</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Create Assignment Modal -->
+<div id="createAssignmentModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Create Assignment</h3>
+      <button class="close-btn" onclick="closeModal('createAssignmentModal')">✕</button>
+    </div>
+    <form onsubmit="createAssignment(event)">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" id="assignmentTitle" required />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" id="assignmentDescription" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Due Date</label>
+        <input type="datetime-local" class="form-control" id="assignmentDueDate" required />
+      </div>
+      <div class="form-group">
+        <label>Points</label>
+        <input type="number" class="form-control" id="assignmentPoints" value="100" required />
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary btn" onclick="closeModal('createAssignmentModal')">Cancel</button>
+        <button type="submit" class="btn">Create Assignment</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Submit Assignment Modal -->
+<div id="submitAssignmentModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Submit Assignment</h3>
+      <button class="close-btn" onclick="closeModal('submitAssignmentModal')">✕</button>
+    </div>
+    <form onsubmit="submitAssignment(event)">
+      <input type="hidden" id="submitAssignmentId" />
+      <div class="form-group">
+        <label>Upload File (PDF, DOCX, or Image)</label>
+        <div class="file-upload-area" id="assignmentFileUploadArea" onclick="document.getElementById('assignmentFileInput').click()">
+          <div id="assignmentFileUploadText">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📁</div>
+            <div style="font-weight: 600; margin-bottom: 0.25rem;">Click to upload file</div>
+            <div style="font-size: 0.9rem; color: var(--muted);">PDF, DOCX, PNG, JPG (Max 10MB)</div>
+          </div>
+        </div>
+        <input type="file" id="assignmentFileInput" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" style="display: none;" onchange="handleAssignmentFileSelect(event)" />
+        <div id="assignmentFileInfo"></div>
+      </div>
+      <div class="form-group">
+        <label>Additional Notes (Optional)</label>
+        <textarea class="form-control" id="submissionText" placeholder="Add any additional notes or comments..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary btn" onclick="closeModal('submitAssignmentModal')">Cancel</button>
+        <button type="submit" class="btn" id="submitAssignmentBtn">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Grade Assignment Modal - Fixed Version -->
+<div id="gradeAssignmentModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Grade Submission</h3>
+      <button class="close-btn" onclick="closeModal('gradeAssignmentModal')">✕</button>
+    </div>
+    <form onsubmit="gradeAssignment(event)">
+      <input type="hidden" id="gradeSubmissionId" />
+      <input type="hidden" id="gradeAssignmentId" />
+      
+      <div class="form-group">
+        <label>Grade (out of <span id="maxPoints">100</span>)</label>
+        <input 
+          type="number" 
+          class="form-control" 
+          id="gradeValue" 
+          required 
+          min="0" 
+          step="1"
+          placeholder="Enter grade"
+        />
+        <div style="font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem;">
+          Enter a whole number between 0 and <span id="maxPoints2">100</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Feedback (Optional)</label>
+        <textarea 
+          class="form-control" 
+          id="gradeFeedback" 
+          rows="4"
+          placeholder="Provide feedback to help the student improve..."
+        ></textarea>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary btn" onclick="closeModal('gradeAssignmentModal')">Cancel</button>
+        <button type="submit" class="btn">Submit Grade</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- View Submissions Modal - Fixed Version -->
+<div id="viewSubmissionsModal" class="modal">
+  <div class="modal-content" style="max-width: 900px;">
+    <div class="modal-header">
+      <h3>Assignment Submissions</h3>
+      <button class="close-btn" onclick="closeModal('viewSubmissionsModal')">✕</button>
+    </div>
+    <div id="submissionsList" style="max-height: 70vh; overflow-y: auto;"></div>
+  </div>
+</div>
+<!-- ==================== QUIZ MODALS ==================== -->
+
+<!-- Create Quiz Modal -->
+<div id="createQuizModal" class="modal">
+  <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+    <div class="modal-header">
+      <h3>📝 Create Quiz</h3>
+      <button class="close-btn" onclick="closeModal('createQuizModal')">✕</button>
+    </div>
+    <form onsubmit="createQuiz(event)">
+      <div class="form-group">
+        <label>Quiz Title *</label>
+        <input type="text" class="form-control" id="quizTitle" placeholder="Enter quiz title" required>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" id="quizDescription" placeholder="Enter quiz description" rows="3"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Time Limit (minutes)</label>
+        <input type="number" class="form-control" id="quizTimeLimit" placeholder="Leave empty for no time limit" min="1">
+      </div>
+
+      <div style="border-top: 2px solid var(--border); margin: 2rem 0; padding-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3>Questions</h3>
+          <button type="button" class="btn btn-small" onclick="addQuizQuestion()">➕ Add Question</button>
+        </div>
+        <div id="quizQuestionsList"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary btn" onclick="closeModal('createQuizModal')">Cancel</button>
+        <button type="submit" class="btn">Create Quiz</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Take Quiz Modal -->
+<div id="takeQuizModal" class="modal">
+  <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+    <div class="modal-header">
+      <h3 id="takeQuizTitle">Quiz</h3>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span id="quizTimer" style="font-weight: 700; color: var(--primary); display: none;"></span>
+        <button class="close-btn" onclick="closeModal('takeQuizModal')">✕</button>
+      </div>
+    </div>
+    <div id="quizQuestionsDisplay"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn" onclick="submitQuiz()">✅ Submit Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- View Quiz Results Modal -->
+<div id="viewQuizResultsModal" class="modal">
+  <div class="modal-content" style="max-width: 900px;">
+    <div class="modal-header">
+      <h3>📊 Quiz Results</h3>
+      <button class="close-btn" onclick="closeModal('viewQuizResultsModal')">✕</button>
+    </div>
+    <div id="quizResultsList" style="max-height: 70vh; overflow-y: auto;"></div>
+  </div>
+</div>
+
+<!-- Review Quiz Modal -->
+<div id="reviewQuizModal" class="modal">
+  <div class="modal-content" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+    <div class="modal-header">
+      <h3>👀 Review Quiz Answers</h3>
+      <button class="close-btn" onclick="closeModal('reviewQuizModal')">✕</button>
+    </div>
+    <div id="quizReviewContainer"></div>
+  </div>
+</div>
+
+<!-- Upload Note Modal -->
+<div id="uploadNoteModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Upload Study Material</h3>
+      <button class="close-btn" onclick="closeModal('uploadNoteModal')">✕</button>
+    </div>
+    <form onsubmit="uploadNote(event)">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" id="noteTitle" required />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" id="noteDescription" placeholder="Brief description of the study material"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Upload File (PDF, DOCX, PPT)</label>
+        <div class="file-upload-area" id="noteFileUploadArea" onclick="document.getElementById('noteFileInput').click()">
+          <div id="noteFileUploadText">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📚</div>
+            <div style="font-weight: 600; margin-bottom: 0.25rem;">Click to upload file</div>
+            <div style="font-size: 0.9rem; color: var(--muted);">PDF, DOCX, PPTX, Images (Max 10MB)</div>
+          </div>
+        </div>
+        <input type="file" id="noteFileInput" accept=".pdf,.doc,.docx,.ppt,.pptx,.png,.jpg,.jpeg" style="display: none;" onchange="handleNoteFileSelect(event)" />
+        <div id="noteFileInfo"></div>
+      </div>
+      <div class="form-group">
+        <label>Or Add Link</label>
+        <input type="url" class="form-control" id="noteLink" placeholder="https://drive.google.com/... or any other link" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary btn" onclick="closeModal('uploadNoteModal')">Cancel</button>
+        <button type="submit" class="btn" id="uploadNoteBtn">Upload Material</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="script.js">const API_BASE_URL = 'http://localhost/class-o-connect/api';</script>
+
+<!-- Subscription Popup Modal -->
+<div id="subscriptionPopup" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 10000; align-items: center; justify-content: center;">
+  <div class="modal-content" style="max-width: 900px; max-height: 90vh; overflow-y: auto; margin: auto; position: relative; transform: none;">
+    <div class="modal-header">
+      <h3>🚀 Upgrade to Pro - Required</h3>
+      <span style="color: var(--danger); font-size: 0.9rem; font-weight: 600;">You must subscribe to continue</span>
+    </div>
+    <div style="text-align: center; padding: 20px;">
+      <h2 style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;">Unlock Premium Features</h2>
+      <p style="color: var(--muted); margin-bottom: 2rem;">Get access to all premium features and enhance your learning experience</p>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 2rem;">
+        <!-- Free Plan -->
+        <div style="background: var(--card); border: 2px solid var(--border); border-radius: 16px; padding: 32px; text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🌱</div>
+          <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text);">Free</h3>
+          <p style="color: var(--muted); margin-bottom: 1.5rem;">Perfect for getting started</p>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <span style="font-size: 2.5rem; font-weight: 700; color: var(--success);">₹0</span>
+            <div style="color: var(--muted); font-size: 0.9rem;">Forever Free</div>
+          </div>
+
+          <ul style="list-style: none; text-align: left; margin-bottom: 1.5rem; padding: 0;">
+            <li style="padding: 8px 0; color: var(--text);">✓ Access to 10 basic courses</li>
+            <li style="padding: 8px 0; color: var(--text);">✓ Basic progress tracking</li>
+            <li style="padding: 8px 0; color: var(--text);">✓ Community forum access</li>
+            <li style="padding: 8px 0; color: var(--text);">✓ Mobile app access</li>
+            <li style="padding: 8px 0; color: var(--muted); opacity: 0.6;">✗ Advanced analytics</li>
+            <li style="padding: 8px 0; color: var(--muted); opacity: 0.6;">✗ Virtual labs</li>
+            <li style="padding: 8px 0; color: var(--muted); opacity: 0.6;">✗ Priority support</li>
+          </ul>
+
+          <button class="btn-secondary btn" style="width: 100%;" onclick="closeSubscriptionPopup()">Current Plan</button>
+        </div>
+
+        <!-- Pro Plan -->
+        <div style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-strong) 100%); border-radius: 16px; padding: 32px; text-align: center; position: relative; color: white; box-shadow: var(--shadow);">
+          <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--warning); color: white; padding: 6px 24px; border-radius: 20px; font-weight: 700; font-size: 0.75rem;">MOST POPULAR</div>
+          
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+          <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Pro</h3>
+          <p style="opacity: 0.9; margin-bottom: 1.5rem;">Best for serious learners</p>
+          
+          <div style="margin-bottom: 1.5rem;">
+            <span style="font-size: 2.5rem; font-weight: 700;">₹5</span>
+            <div style="opacity: 0.9; font-size: 0.9rem;">per month</div>
+          </div>
+
+          <ul style="list-style: none; text-align: left; margin-bottom: 1.5rem; padding: 0;">
+            <li style="padding: 8px 0;">✓ Access to all 500+ premium courses</li>
+            <li style="padding: 8px 0;">✓ Advanced AI tutor</li>
+            <li style="padding: 8px 0;">✓ Virtual labs & simulations</li>
+            <li style="padding: 8px 0;">✓ Download lessons & study offline</li>
+            <li style="padding: 8px 0;">✓ Unlimited quizzes & mock tests</li>
+            <li style="padding: 8px 0;">✓ Premium certificates</li>
+            <li style="padding: 8px 0;">✓ Custom study paths</li>
+            <li style="padding: 8px 0;">✓ Priority support (24/7)</li>
+          </ul>
+
+          <button class="btn" style="width: 100%; background: white; color: var(--primary); font-weight: 700;" onclick="initiateProPayment()">Subscribe Now</button>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid rgba(255,255,255,0.1);">
+        <p style="color: var(--danger); font-weight: 600; margin-bottom: 1rem;">⚠️ Subscription required to continue using Class-o-Connect</p>
+        <button class="btn" style="background: var(--danger); width: auto; padding: 12px 32px;" onclick="logoutUser()">Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Timer Display (Bottom Right) -->
+<div id="subscriptionTimer" style="position: fixed; bottom: 24px; right: 24px; background: var(--card); padding: 16px 24px; border-radius: 16px; box-shadow: var(--shadow); border: 2px solid var(--primary); z-index: 9999; display: none; backdrop-filter: var(--backdrop-filter);">
+  <div style="text-align: center;">
+    <div style="font-size: 0.85rem; color: var(--muted); font-weight: 600; margin-bottom: 4px;">Free Trial Ending In</div>
+    <div id="timerDisplay" style="font-size: 2rem; font-weight: 800; background: linear-gradient(45deg, var(--primary), var(--primary-strong)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">02:00</div>
+    <div style="font-size: 0.75rem; color: var(--muted); margin-top: 4px;">Subscribe to continue</div>
+  </div>
+</div>
+
+<!-- Razorpay Checkout Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script src="script.js">const API_BASE_URL = 'http://localhost/class-o-connect/api';</script>
+   
+
+</body>
+</html>

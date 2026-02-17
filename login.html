@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Class-O-Connect - Login</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #667eea 75%, #764ba2 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
+
+@keyframes gradientShift { 
+  0% { background-position: 0% 50%; } 
+  50% { background-position: 100% 50%; } 
+  100% { background-position: 0% 50%; } 
+}
+
+.animated-background { 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+  z-index: -1; 
+  overflow: hidden; 
+}
+
+.math-formula { 
+  position: absolute; 
+  color: rgba(255,255,255,0.15); 
+  font-family: 'Times New Roman', serif; 
+  font-size: 24px; 
+  font-weight: bold; 
+  animation: floatMath 15s infinite ease-in-out; 
+}
+
+@keyframes floatMath { 
+  0%,100% { transform: translateY(0px) rotate(0deg); opacity: 0.1; } 
+  50% { transform: translateY(-30px) rotate(5deg); opacity: 0.2; } 
+}
+
+.dna { 
+  position: absolute; 
+  width: 30px; 
+  height: 120px; 
+  animation: rotateDNA 20s infinite linear; 
+}
+
+.dna::before, .dna::after { 
+  content: ''; 
+  position: absolute; 
+  width: 4px; 
+  height: 100%; 
+  background: linear-gradient(to bottom, rgba(255,107,107,0.4), rgba(78,205,196,0.4), rgba(69,183,209,0.4), rgba(150,206,180,0.4)); 
+  border-radius: 2px; 
+  animation: helixTwist 3s infinite ease-in-out; 
+}
+
+.dna::before { left: 0; animation-delay: 0s; }
+.dna::after { right: 0; animation-delay: 1.5s; }
+
+@keyframes rotateDNA { 
+  0% { transform: translateY(100vh) rotateZ(0deg); } 
+  100% { transform: translateY(-150px) rotateZ(360deg); } 
+}
+
+@keyframes helixTwist { 
+  0%,100% { transform: scaleX(1); } 
+  50% { transform: scaleX(1.5); } 
+}
+
+.study-tool { 
+  position: absolute; 
+  animation: toolFloat 20s infinite ease-in-out; 
+}
+
+.pencil { 
+  width: 12px; 
+  height: 100px; 
+  background: linear-gradient(to bottom, rgba(255,118,117,0.4) 0%, rgba(255,118,117,0.4) 15%, rgba(253,203,110,0.4) 15%, rgba(253,203,110,0.4) 85%, rgba(45,52,54,0.4) 85%); 
+  border-radius: 6px; 
+  position: relative; 
+}
+
+.calculator { 
+  width: 50px; 
+  height: 70px; 
+  background: linear-gradient(45deg, rgba(45,52,54,0.4), rgba(99,110,114,0.4)); 
+  border-radius: 6px; 
+  position: relative; 
+}
+
+.calculator::before { 
+  content: ''; 
+  position: absolute; 
+  top: 8px; 
+  left: 6px; 
+  right: 6px; 
+  height: 15px; 
+  background: rgba(0,184,148,0.4); 
+  border-radius: 2px; 
+}
+
+@keyframes toolFloat { 
+  0%,100% { transform: translateY(0px) rotate(0deg); opacity: 0.15; } 
+  25% { transform: translateY(-50px) rotate(90deg); opacity: 0.25; } 
+  50% { transform: translateY(-30px) rotate(180deg); opacity: 0.2; } 
+  75% { transform: translateY(-60px) rotate(270deg); opacity: 0.3; } 
+}
+
+/* Navigation */
+.nav {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 1rem 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-icon {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  color: #2d3748;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #667eea;
+}
+
+.btn-nav {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.btn-nav:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  color: white;
+}
+
+/* Main */
+.main-content { 
+  flex: 1; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 120px 24px 40px 24px; 
+}
+
+.login-container { 
+  background: rgba(255,255,255,0.95); 
+  backdrop-filter: blur(10px); 
+  border-radius: 20px; 
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
+  padding: 40px; 
+  width: 100%; 
+  max-width: 450px; 
+  border: 1px solid rgba(255,255,255,0.2); 
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.logo-section { 
+  text-align: center; 
+  margin-bottom: 30px; 
+}
+
+.logo-section h1 { 
+  color: #667eea;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.logo-section p { 
+  color: #666;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.role-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.role-btn {
+  flex: 1;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.role-btn.active {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.form-group { 
+  margin-bottom: 20px; 
+}
+
+.form-group label { 
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-group input { 
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.btn { 
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn:hover { 
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.toggle-form {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.toggle-form a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toggle-form a:hover {
+  text-decoration: underline;
+}
+
+.form-container {
+  display: none;
+}
+
+.form-container.active {
+  display: block;
+}
+
+.error-msg {
+  background: #ff4757;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  display: none;
+}
+
+.error-msg.show {
+  display: block;
+}
+
+.success-msg {
+  background: #00b894;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  display: none;
+}
+
+.success-msg.show {
+  display: block;
+}
+
+/* Admin Access Link */
+.admin-access {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.admin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #764ba2;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.admin-link:hover {
+  background: rgba(118, 75, 162, 0.1);
+  transform: translateX(4px);
+}
+
+.admin-icon {
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .login-container { 
+    padding: 32px; 
+    margin: 0 16px; 
+  }
+  
+  .nav-links {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-container">
+    <a href="smart_classroom_homepage.html" class="logo">
+      <div class="logo-icon">
+        <img src="logo.png" alt="Class-o-Connect Logo">
+      </div>
+      Class-o-Connect
+    </a>
+    <ul class="nav-links">
+      <li><a href="smart_classroom_homepage.html#features">Features</a></li>
+      <li><a href="pricing_page.html">Pricing</a></li>
+      <li><a href="aboutus_page.html">About</a></li>
+      <li><a href="smart_classroom_homepage.html#contact">Contact</a></li>
+      <li><a href="login.html" class="btn-nav">Get Started</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Animated Background -->
+<div class="animated-background">
+  <div class="math-formula" style="top:10%;left:5%;">E=mc²</div>
+  <div class="math-formula" style="top:30%;left:85%;">∫f(x)dx</div>
+  <div class="math-formula" style="top:70%;left:10%;">πr²</div>
+  <div class="math-formula" style="top:50%;left:90%;">√(a²+b²)</div>
+  <div class="dna" style="left:15%;"></div>
+  <div class="dna" style="left:75%;"></div>
+  <div class="study-tool pencil" style="top:20%;left:60%;"></div>
+  <div class="study-tool calculator" style="top:75%;left:30%;"></div>
+</div>
+
+<!-- Main Content -->
+<main class="main-content">
+  <div class="login-container">
+    <div class="logo-section">
+      <h1>Class-O-Connect</h1>
+      <p>Smart Learning Platform</p>
+    </div>
+
+    <div id="errorMsg" class="error-msg"></div>
+    <div id="successMsg" class="success-msg"></div>
+
+    <!-- Regular Login Form -->
+    <div id="loginFormContainer" class="form-container active">
+      <div class="role-selector">
+        <button class="role-btn active" data-role="teacher">Teacher</button>
+        <button class="role-btn" data-role="student">Student</button>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" required placeholder="Enter your password">
+        </div>
+        <button type="submit" class="btn" id="loginBtn">Login</button>
+      </form>
+      <p class="toggle-form">
+        Don't have an account? <a id="showSignupLink">Sign Up</a>
+      </p>
+      
+      <!-- Admin Access Link -->
+      <div class="admin-access">
+        <a href="../admin/login.html" class="admin-link">
+          <span class="admin-icon">🔐</span>
+          <span>Administrator Access</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="signupFormContainer" class="form-container">
+      <div class="role-selector">
+        <button class="role-btn active" data-role="teacher">Teacher</button>
+        <button class="role-btn" data-role="student">Student</button>
+      </div>
+
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="signupName">Full Name</label>
+          <input type="text" id="signupName" required placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" required placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" required placeholder="Choose a password" minlength="6">
+        </div>
+        <div class="form-group">
+          <label for="signupConfirmPassword">Confirm Password</label>
+          <input type="password" id="signupConfirmPassword" required placeholder="Confirm your password">
+        </div>
+        <button type="submit" class="btn" id="signupBtn">Sign Up</button>
+      </form>
+      <p class="toggle-form">
+        Already have an account? <a id="showLoginLink">Login</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+<script>
+// API Configuration
+const API_BASE_URL = 'http://localhost/class-o-connect/api';
+
+let currentRole = 'teacher';
+let signupRole = 'teacher';
+
+// Role selection for login
+document.querySelectorAll('#loginFormContainer .role-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('#loginFormContainer .role-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    currentRole = this.dataset.role;
+  });
+});
+
+// Role selection for signup
+document.querySelectorAll('#signupFormContainer .role-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('#signupFormContainer .role-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    signupRole = this.dataset.role;
+  });
+});
+
+// Toggle between forms
+document.getElementById('showSignupLink').addEventListener('click', function() {
+  document.getElementById('loginFormContainer').classList.remove('active');
+  document.getElementById('signupFormContainer').classList.add('active');
+  hideMessages();
+});
+
+document.getElementById('showLoginLink').addEventListener('click', function() {
+  document.getElementById('signupFormContainer').classList.remove('active');
+  document.getElementById('loginFormContainer').classList.add('active');
+  hideMessages();
+});
+
+// Show error message
+function showError(message) {
+  const errorMsg = document.getElementById('errorMsg');
+  errorMsg.textContent = message;
+  errorMsg.classList.add('show');
+  setTimeout(() => errorMsg.classList.remove('show'), 5000);
+}
+
+// Show success message
+function showSuccess(message) {
+  const successMsg = document.getElementById('successMsg');
+  successMsg.textContent = message;
+  successMsg.classList.add('show');
+  setTimeout(() => successMsg.classList.remove('show'), 5000);
+}
+
+// Hide all messages
+function hideMessages() {
+  document.getElementById('errorMsg').classList.remove('show');
+  document.getElementById('successMsg').classList.remove('show');
+}
+
+// Signup
+document.getElementById('signupForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  hideMessages();
+
+  const signupBtn = document.getElementById('signupBtn');
+  signupBtn.disabled = true;
+  signupBtn.textContent = 'Creating Account...';
+
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value;
+  const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+  if (password !== confirmPassword) {
+    showError('Passwords do not match!');
+    signupBtn.disabled = false;
+    signupBtn.textContent = 'Sign Up';
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth.php?action=signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        password: password,
+        role: signupRole
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      showSuccess(data.message);
+      setTimeout(() => {
+        document.getElementById('signupFormContainer').classList.remove('active');
+        document.getElementById('loginFormContainer').classList.add('active');
+        document.getElementById('signupForm').reset();
+      }, 1500);
+    } else {
+      showError(data.message);
+    }
+  } catch (error) {
+    showError('Network error. Please check your connection and try again.');
+    console.error('Signup error:', error);
+  } finally {
+    signupBtn.disabled = false;
+    signupBtn.textContent = 'Sign Up';
+  }
+});
+
+// Regular Login
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  hideMessages();
+
+  const loginBtn = document.getElementById('loginBtn');
+  loginBtn.disabled = true;
+  loginBtn.textContent = 'Logging in...';
+
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth.php?action=login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        role: currentRole
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      showSuccess('Login successful! Redirecting...');
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1000);
+    } else {
+      showError(data.message);
+    }
+  } catch (error) {
+    showError('Network error. Please check if the server is running.');
+    console.error('Login error:', error);
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'Login';
+  }
+});
+</script>
+</body>
+</html>
