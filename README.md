@@ -1,2 +1,2 @@
 # Class-o-connect
-Smart Interactive Classroom 
+Smart classroom platform for teachers and students
